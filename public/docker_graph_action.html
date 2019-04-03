@@ -9,13 +9,20 @@
 		<script src="assets/js/underscore-min.js"> </script>
 		<script src="assets/js/jquery-min.js"> </script>
 
-                <link rel='stylesheet' href='assets/css/prism.css'>
+        <link rel='stylesheet' href='assets/css/prism.css'>
 		<script type="text/javascript" src="assets/tinymce/tinymce.min.js"> </script>
 		<script src="assets/js/angular.min.js"></script>
 		<script type="text/javascript" src="assets/angular-ui-tinymce/src/tinymce.js"> </script>
 		<script src="assets/js/angular-animate.min.js"></script> <script src="assets/js/angular-sanitize.min.js"></script>
 		<script src="assets/js/ui-bootstrap-tpls-2.5.0.min.js"></script>
 		<script src="assets/js/angular-ui-notification.min.js"></script>
+        <script src="assets/js/svg-assets-cache.js"></script>
+        <script src="assets/js/angular-messages.min.js"></script>
+        <script src="assets/js/angular-material.min.js"></script>
+        <script src="assets/js/angular-aria.min.js"></script>
+        <!-- UI ROUTER DA SOSTITUIRE CON VERSIONE ASSETS/JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/angular-ui-router.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/angular-ui-router.js.map"></script>
 
 		<link href="assets/css/bootstrap.css" rel="stylesheet">
 		<link href="assets/css/grapheditor.css" rel="stylesheet">
@@ -33,10 +40,12 @@
 		<link rel="stylesheet" href="assets/css/font-awesome.css"/>
 		<link rel="stylesheet" href="assets/css/build.css"/>
 		<link rel="stylesheet" href="assets/css/angular-ui-notification.min.css"/>
-	   
+	    <!-- MATERIAL FONT -->
+        <link href="/assets/css/angular-material.min.css" rel="stylesheet"/>
 	    <!-- <script src="lib/utils.js"></script> -->
 	    <!-- angular services -->
 	   <script src="app/services/docker_service.js"> </script>
+       <script src="assets/js/angular-route-min.js"></script>
           <script src="app/services/socket_service.js"> </script>
 	   <script src="app/services/container_manager_service.js"> </script>
 	   <script src="app/services/cleaner_service.js"> </script>
@@ -49,7 +58,7 @@
 
 <script>
 	//ANGULAR COMPONENT REGISTRATION 
-	angular.module("dockersecplayground", ['ngAnimate', 'chieffancypants.loadingBar', 'ngSanitize', 'ui.bootstrap', 'ngWebSocket', 'ui-notification', 'colorpicker.module'] )
+	angular.module("dockersecplayground", ['ngAnimate', 'chieffancypants.loadingBar', 'ngSanitize', 'ui.bootstrap', 'ngWebSocket', 'ui-notification', 'colorpicker.module', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'ngRoute'] )
     .component("copyFromContainerComponent", dsp_copyFromContainer)
     .component("copyInContainerComponent", dsp_copyInContainer)
 		.service('dockerAPIService', DockerAPIService) 
@@ -65,7 +74,7 @@
 	       return str.match(new RegExp(".{1,"+length+"}","g")).join("<br>");
 	    }
 	})
-		    .config(function(NotificationProvider, $locationProvider, cfpLoadingBarProvider) {
+		    .config(function(NotificationProvider, $locationProvider, cfpLoadingBarProvider, $mdThemingProvider, $routeProvider) {
 			NotificationProvider.setOptions({
 			    delay: 2000,
 			    startTop: 20,
@@ -80,7 +89,8 @@
 			cfpLoadingBarProvider.includeSpinner = true;
 			cfpLoadingBarProvider.includeBar = false;
 			cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-		    });
+            
+            });
 
 </script>
 

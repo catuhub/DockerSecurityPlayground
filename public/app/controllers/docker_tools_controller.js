@@ -1,16 +1,27 @@
 var DSP_DockerToolsCtrl  = function($scope, Notification, dockerAPIService) {
 	console.log("DOCKER TOOLS CONTROLLER");
   $scope.listServices = [];
+  $scope.showPorts = false;
+  $scope.showEnv = false;
+  $scope.showTools = false;
   $scope.optPort = { container: 0, host: 0};
   $scope.optionalPorts = [];
   $scope.currentEnvironment = {name: '', value: ''};
-
-
   $scope.currentContainer
   $scope.t = {
     name: 'red'
   };
 
+  var initTab = "cname";
+  $scope.selectedItem = initTab;
+  $scope.checked = ['true','','','','',''];
+  $scope.changeTab = function(tab,selected){
+      console.log($scope.currentContainer.selectedImage)
+    for(i = 0;i<$scope.checked.length;i++)
+      $scope.checked[i] = 0;
+    $scope.checked[tab] = 'true';
+    $scope.selectedItem = selected;
+  }
 
   function initCurrentContainer() {
     $scope.currentContainer.name = "newService"
@@ -33,6 +44,7 @@ var DSP_DockerToolsCtrl  = function($scope, Notification, dockerAPIService) {
   dockerAPIService.initServices();
 
 $scope.addEnvironment = function addEnvironment() {
+  $scope.showEnv = true;
   console.log("ADD ENV");
   if ($scope.currentEnvironment.name && $scope.currentEnvironment.value) {
   $scope.currentContainer.environments.push({
@@ -51,6 +63,8 @@ $scope.deleteEnvironment = function deleteEnvironment(nameEnv) {
       name: nameEnv
     }
   ));
+  if($scope.currentContainer.environments.length == 0)
+    $scope.showEnv = false;
 }
 
 $scope.containerHasNetwork = function containerHasNetwork(c, n) {
@@ -94,6 +108,8 @@ $scope.detachNetwork = function detachNetwork(c, n) {
 }
 
   $scope.runService = function runService() {
+    console.log($scope.currentContainer.selectedImage);
+    $scope.showTools = true;
     console.log("RUN SERVICE");
     console.log($scope.currentContainer);
     dockerAPIService.runService($scope.currentContainer)
@@ -146,10 +162,15 @@ $scope.deleteService = function deleteService(containerName) {
     .then(function successCallback(response) {
       Notification("Service Deleted!");
       $scope.listServices = dockerAPIService.deleteLocalService(containerName);
+      if($scope.listServices.length == 0){
+        $scope.showTools = false;
+      }
     },
       function errorCallback(error) {
       Notification(error.data.message, 'error');
     });
+    console.log($scope.listServices);
+
 }
 
 $scope.setAsDefault = function setAsDefault(container, networkName) {
@@ -165,6 +186,7 @@ $scope.setAsDefault = function setAsDefault(container, networkName) {
 
 $scope.addOptionalPort = function addOptionalPort() {
   // TODO Check conditions
+  $scope.showPorts = true;
   var optionalPort = angular.copy($scope.optPort);
   try {
 
@@ -188,7 +210,8 @@ $scope.removeOptionalPort = function removeOptionalPort($index) {
   // Delete from currentContainer port
   delete $scope.currentContainer.ports[op.container];
   $scope.optionalPorts.splice($index, 1);
-
+  if($scope.optionalPorts.length === 0)
+    $scope.showPorts = false;
 }
 
 
