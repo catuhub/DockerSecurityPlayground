@@ -5,6 +5,7 @@
      <div class="btn-group">
         <label class="btn btn-primary" ng-model="imagePanel" uib-btn-radio="'repo_images'">Repo Images</label>
         <label class="btn btn-primary" ng-model="imagePanel" uib-btn-radio="'all_images'">All Images</label>
+        <label class="btn btn-primary" ng-model="imagePanel" uib-btn-radio="'hack_tools'">Hack Tools</label>
     </div>
     <div ng-if="imagePanel === 'repo_images'">
           <h2 class="text-center"> Repo Images </h2>
@@ -79,7 +80,23 @@
 
 
     </div>   
-    
+    <div ng-ig="imagePanel === 'hack_tools'">
+        <h2 class="text-center"> Suggested Tools </h2>
+    <hr>
+        <ul class="list-group">
+            <li class="list-group-item borderless" ng-repeat="elem in listTools">
+                <div  class="row">
+                    <div class="col-sm-6" ng-class="elem.textType"> <b>{{elem.name}} </b></div>
+                     <div ng-if=!elem.contains class="col-sm-6">
+                        <a href="" id="downloadImage" ng-class="{disabled : elem.disabled}" ng-click="downloadImage(elem)" >Download   <span class="glyphicon glyphicon-download"></span></a>
+                    </div>
+                    <div ng-if=elem.contains class="col-sm-6">
+                        <a href="" id="delAction" ng-click="delImage(elem)" >Delete   <span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
     
           <!-- <a  id="addAction" href="" ng-click="graphAction($event)" > <div class="glyphicon glyphicon-plus"></div></a></span> -->
 

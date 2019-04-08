@@ -94,6 +94,8 @@ app.use((req, res, next) => {
 app.get('/dsp_v1/docker_images/', networkHandler.getListImages);
 app.get('/dsp_v1/dsp_images', dockerImages.getImagesAllRepos);
 app.get('/dsp_v1/dsp_images/:reponame', dockerImages.getImagesRepo);
+//Api Hack Tools
+app.get('/dsp_v1/hack_tools/', networkHandler.getListHackTools);
 // Api labels
 app.get('/dsp_v1/labels/:repo', labels.allLabels);
 app.get('/dsp_v1/labels/:repo/:nameLab', labels.labelsOfLab);

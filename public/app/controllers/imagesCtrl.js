@@ -29,7 +29,12 @@ var dsp_ImagesCtrl= function($scope, $log, SafeApply,  WalkerService, RegexServi
               $scope.imageList = imageList
               initAllImages()
               console.log($location.hash());
-              $timeout(function(){$anchorScroll()});
+              $timeout(function(){$anchorScroll()})
+              dockerAPIService.getListHackTools()
+                .then(function successCallback(response){
+                    $scope.listTools = response.data.data.images;
+                    initToolsImages();
+                });
             },
             function errorCallback(response) {
                 Notification({message:"Sorry,  error in loading docker images"}, 'error');
@@ -38,6 +43,7 @@ var dsp_ImagesCtrl= function($scope, $log, SafeApply,  WalkerService, RegexServi
     function errorCallback(response) {
         Notification({message:"Sorry,  error in loading docker images"}, 'error');
     })
+
 
   function initAllImages() {
     console.log("IN INIT ALL IMAGES")
@@ -58,6 +64,23 @@ var dsp_ImagesCtrl= function($scope, $log, SafeApply,  WalkerService, RegexServi
     })
   }
 
+    function initToolsImages(){
+        console.log("IN INIT TOOLS IMAGES");
+        dockerToolsImages = [];
+        ims = $scope.allImages.map(i => i.name);
+        dockerToolsImages = _.union(dockerToolsImages, ims);
+        dockerToolsImages = _.uniq(dockerToolsImages);
+        //console.log($scope.imageList);
+        _.each($scope.listTools, (image) => {
+            if(_.contains(dockerToolsImages, image.name)){
+                image.contains = true;
+                image.textType = "text-success"
+            } else {
+                image.contains = false;
+                image.textType = "text-danger"
+            }
+        })
+    }
 
     function disableAllImages(iName, status=true) {
       _.each($scope.allImages, function (ims) {
@@ -67,6 +90,12 @@ var dsp_ImagesCtrl= function($scope, $log, SafeApply,  WalkerService, RegexServi
           ims.contains = status
         }
       })
+
+        _.each($scope.listTools, function(ims){
+            if(ims.name === iName){
+                ims.contains = status;
+            }
+        })
 
       for (li in $scope.imageList) {
         labImages = $scope.imageList[li].lab_images
@@ -90,6 +119,13 @@ var dsp_ImagesCtrl= function($scope, $log, SafeApply,  WalkerService, RegexServi
           }
         }
       }
+
+      _.each($scope.listTools, function(ims){
+          if(ims.name === iName){
+              ims.textType = success ? "text-success" : "text-danger";
+              ims.contains = success;
+          }
+      })
   }
 
 

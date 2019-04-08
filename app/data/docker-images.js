@@ -1,4 +1,5 @@
 const dockerImages = require('mydockerjs').imageMgr;
+const appRoot = require('app-root-path');
 const dot = require('dot-object');
 const _ = require('underscore');
 const path = require('path');
@@ -370,6 +371,16 @@ function getListImages(callback) {
     });
 }
 
+function getListHackTools(callback){
+    const path_tools = path.join(appRoot.path, 'config', 'hack_tools.json');
+    jsonfile.readFile(path_tools,(err,data)=> {
+        if(err) callback(err);
+        else{
+            callback(err,data);
+        }
+    });
+}
+
 module.exports = {
   buildImages,
   getRepoImages,
@@ -380,5 +391,6 @@ module.exports = {
   getImagesAllRepos,
   // Change from data - err to err, data
   // Set icon if labels doesn't contains a correct path
-  getListImages
+  getListImages,
+  getListHackTools
 };

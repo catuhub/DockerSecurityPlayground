@@ -106,7 +106,11 @@ function getListImages(req, res) {
   });
 }
 
-
+function getListHackTools(req,res){
+    dockerImages.getListHackTools((err,data) => {
+        httpHelper.response(res,err,data);
+    });
+}
 
 
 
@@ -312,6 +316,7 @@ function dirExists(req, res) {
 exports.save = save;
 exports.get = get;
 exports.getListImages = getListImages;
+exports.getListHackTools = getListHackTools;
 exports.dirExists = dirExists;
 exports.dockershell = dockershell;
 exports.dockercopy = dockercopy;
