@@ -26,6 +26,22 @@ function createFiles(dfPath, content, cb) {
     }, (err) => cb(err));
 }
 
+function setPermissions(dfPath, content, cb) {
+  async.eachSeries(content, (f,c) => {
+    filePath = path.join(path.join(dfPath, f.id));
+      if(f.isExecutable == true)
+      {
+        fs.chmod(filePath,'755', (err) => {
+          c(err);
+        })
+      }
+      else{
+        c(null);
+      }
+      //fsExtra.outputFile(filePath, f.content, c);
+  }, (err) => cb(err));
+}
+
 function getDockerfileBasePath(callback) {
   async.waterfall([
     (cb) => configData.getUserPath(cb),
@@ -147,6 +163,8 @@ function editDockerfile(name, content, callback) {
     // Create empty dir
     (cb) => fs.mkdir(dfPath, cb),
     (cb) => createFiles(dfPath, content, cb),
+    //set execute permissions
+    (cb) => setPermissions(dfPath, content, cb),
     // Delete temp path
     (cb) => rimraf(tempPath, cb)
       // const mm = jsonConverter(
