@@ -5,7 +5,9 @@ var api = '/dsp_v1/docker_network/' ;
 	var dsp_images_docker = '/dsp_v1/dsp_images/' ;
 	var dsp_running_services = '/dsp_v1/services/' ;
 	var dsp_dockerfile_service = '/dsp_v1/dockerfiles/' ;
-	var dsp_service_network = '/dsp_v1/networkservices' ;
+  var dsp_service_network = '/dsp_v1/networkservices' ;
+  var dsp_oneline_services = '/dsp_v1/oneline_services/';
+  var dsp_hack_tools = '/dsp_v1/hack_tools';
   var url = 'http://' + location.host + '/';
 
   var i=0;
@@ -101,6 +103,12 @@ var api = '/dsp_v1/docker_network/' ;
     setServices : function setServices(arrayService) {
       listServices = arrayService;
     },
+    getListHackTools : function getListHackTools(){
+      return $http.get(dsp_hack_tools);
+    },  
+    runServiceOneLine:function runServiceOneLine(container){
+     return $http.post(dsp_oneline_services+container.name, container)
+    },  
 		useLab : function useLab(repoName,labName, isEdit, successCB) {
                         isEditing = (isEdit) ? 1 : 0;
                         sendReq = api+repoName+"/"+labName+"?isEditing="+isEditing

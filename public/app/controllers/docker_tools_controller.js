@@ -144,6 +144,40 @@ $scope.detachNetwork = function detachNetwork(c, n) {
       Notification(error.data.message, 'error');
     })
   }
+
+  $scope.runServiceOneLine = function runServiceOneLine() {
+      console.log($scope.currentContainer.selectedImage);
+      $scope.showTerminal = true;
+      console.log("RUN SERVICE ONE LINE");
+      console.log($scope.currentContainer);
+      SocketService.manage(JSON.stringify({
+          action : 'docker_run',
+          params : {
+            currentContainer: $scope.currentContainer
+          }
+      }), function(event){
+      var data = JSON.parse(event.data)
+      if(data.status === 'success')  {
+        console.log('success');
+      }
+      else if(data.status === 'error') {
+              Notification('Some error in docker-compose up command', 'error');
+              console.log(data)
+              $scope.responseError = $scope.responseErrorHeader + data.message;
+              $scope.labState = playProto
+              $scope.action = $scope.startLab
+        }
+      else {
+          console.log(data);
+          $scope.$broadcast('terminal-output', {
+              output: true,
+              text: [data.message],
+              breakLine: true
+          });
+          $scope.$apply();
+      }
+    });
+   }
   $scope.stopService = function stopService(containerName) {
      console.log("STOP SERVICE");
     dockerAPIService.stopService(containerName)

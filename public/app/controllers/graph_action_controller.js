@@ -325,6 +325,11 @@ $scope.clearLogs = function() {
   $scope.responseError = "";
 }
 
+dockerAPIService.getListHackTools()
+    .then(function successCallback(response){
+        $scope.listTools = response.data.data.images;
+    });
+
 /************************** NETWORK INFO  **********************/
 //Current network view
 

@@ -174,6 +174,13 @@ function getListImages(req, res) {
     dockerImages.getListImages((err, data, completeDescription) => { httpHelper.response(res, err, data);
   });
 }
+
+function getListHackTools(req,res){
+    dockerImages.getListHackTools((err,data) => {
+        httpHelper.response(res,err,data);
+    });
+}
+
 function dockercopy(req, res) {
   let destinationPath;
   let destinationDir;

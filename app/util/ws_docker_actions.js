@@ -12,6 +12,8 @@ const LabStates = require('./LabStates');
 const appUtils = require('../util/AppUtils');
 const fs = require('fs');
 const rimraf = require('rimraf');
+const utils = require('node-cmd');
+const dockerJS = require('mydockerjs').utils;
 
 
 const dockerAction = require(`${appRoot}/app/data/docker_actions`);
@@ -193,6 +195,25 @@ exports.composeUp = function composeUp(params, body, callback, notifyCallback) {
       else callback(null);
     });
 };
+exports.dockerRun = function dockerRun(params, callback, notifyCallback){
+    log.info('[DOCKER ACTIONS - RUN SERVICE ONE LINE]');
+    async.waterfall([
+      (cb) => Checker.checkParams(params.currentContainer, ['name', 'isOneLine', 'OneLineNetwork', 'command'], cb),
+      (cb) => {
+          let image = params.currentContainer.selectedImage.name;
+          let flags = '--rm';
+          flags += ` --network=${params.currentContainer.OneLineNetwork}`;
+          let cmd = params.currentContainer.command;
+          const toExec = `docker run ${flags} ${image} ${cmd}`;
+          dockerJS.docker_stdout(utils.get(toExec,cb),notifyCallback);
+      }
+    ],
+    (err) => {
+    if (err) {
+      log.error(err.message);
+    }
+    callback(err)
+  })
 
 exports.composeDown = function composeDown(params, body, callback, notifyCallback) {
   log.info('[COMPOSE DOWN]');
