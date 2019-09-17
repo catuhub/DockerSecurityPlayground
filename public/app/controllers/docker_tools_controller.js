@@ -1,13 +1,22 @@
-var DSP_DockerToolsCtrl  = function($scope, Notification, dockerAPIService) {
+var DSP_DockerToolsCtrl  = function($scope, $timeout, $q, $log, Notification, dockerAPIService, SocketService) {
 	console.log("DOCKER TOOLS CONTROLLER");
   $scope.listServices = [];
   $scope.showPorts = false;
   $scope.showEnv = false;
   $scope.showTools = false;
+  $scope.showTerminal = false;
   $scope.optPort = { container: 0, host: 0};
   $scope.optionalPorts = [];
   $scope.currentEnvironment = {name: '', value: ''};
   $scope.currentContainer
+
+  $scope.simulateQuery = false;
+  $scope.isDisabled    = false;
+  $scope.repos         = loadAll();
+  $scope.querySearch   = querySearch;
+  $scope.selectedItemChange = selectedItemChange;
+  $scope.searchTextChange   = searchTextChange;
+
   $scope.t = {
     name: 'red'
   };
@@ -25,7 +34,9 @@ var DSP_DockerToolsCtrl  = function($scope, Notification, dockerAPIService) {
 
   function initCurrentContainer() {
     $scope.currentContainer.name = "newService"
-    $scope.currentContainer.isInteractive = true;
+    $scope.currentContainer.isInteractive = false;
+    $scope.currentContainer.isOneLine = false;
+    $scope.currentContainer.OneLineNetwork = "";
     $scope.currentContainer.isDaemonized = true;
     $scope.currentContainer.command = "/bin/bash"
     $scope.currentContainer.environments = [];
@@ -122,6 +133,51 @@ $scope.detachNetwork = function detachNetwork(c, n) {
       Notification(error.data.message, 'error');
     })
   }
+
+  $scope.runServiceOneLine = function runServiceOneLine() {
+    console.log($scope.currentContainer.selectedImage);
+    $scope.showTerminal = true;
+    console.log("RUN SERVICE ONE LINE");
+    console.log($scope.currentContainer);
+    SocketService.manage(JSON.stringify({
+        action : 'docker_run',
+        params : {
+          currentContainer: $scope.currentContainer
+        }
+    }), function(event){
+    var data = JSON.parse(event.data)
+    if(data.status === 'success')  {
+      console.log('success');
+    }
+    else if(data.status === 'error') {
+            Notification('Some error in docker-compose up command', 'error');
+            console.log(data)
+            $scope.responseError = $scope.responseErrorHeader + data.message;
+            $scope.labState = playProto
+            $scope.action = $scope.startLab
+      }
+    else {
+        console.log(data);
+        $scope.$broadcast('terminal-output', {
+            output: true,
+            text: [data.message],
+            breakLine: true
+        });
+        $scope.$apply();
+    }
+  });
+  }
+    /*dockerAPIService.runServiceOneLine($scope.currentContainer)
+    .then(function successCallback(response) {
+      initCurrentContainer();
+      dockerAPIService.initServices();
+
+    }, function errorCallback(error) {
+      console.log(error);
+      Notification(error.data.message, 'error');
+    })
+  }*/
+
   $scope.stopService = function stopService(containerName) {
      console.log("STOP SERVICE");
     dockerAPIService.stopService(containerName)
@@ -184,6 +240,12 @@ $scope.setAsDefault = function setAsDefault(container, networkName) {
       });
   }
 
+$scope.setOneLineNetwork = function setOneLineNetwork(networkName){
+    $scope.currentContainer.OneLineNetwork = networkName;
+    $scope.currentContainer.isDaemonized = false;
+    console.log($scope.currentContainer.OneLineNetwork);
+}
+
 $scope.addOptionalPort = function addOptionalPort() {
   // TODO Check conditions
   $scope.showPorts = true;
@@ -215,7 +277,79 @@ $scope.removeOptionalPort = function removeOptionalPort($index) {
 }
 
 
+function loadAll() {
+      var repos = [
+        {
+          'name'      : 'AngularJS',
+          'url'       : 'https://github.com/angular/angular.js',
+          'watchers'  : '3,623',
+          'forks'     : '16,175',
+        },
+        {
+          'name'      : 'Angular',
+          'url'       : 'https://github.com/angular/angular',
+          'watchers'  : '469',
+          'forks'     : '760',
+        },
+        {
+          'name'      : 'AngularJS Material',
+          'url'       : 'https://github.com/angular/material',
+          'watchers'  : '727',
+          'forks'     : '1,241',
+        },
+        {
+          'name'      : 'Angular Material',
+          'url'       : 'https://github.com/angular/material2',
+          'watchers'  : '727',
+          'forks'     : '1,241',
+        },
+        {
+          'name'      : 'Bower Material',
+          'url'       : 'https://github.com/angular/bower-material',
+          'watchers'  : '42',
+          'forks'     : '84',
+        },
+        {
+          'name'      : 'Material Start',
+          'url'       : 'https://github.com/angular/material-start',
+          'watchers'  : '81',
+          'forks'     : '303',
+        }
+      ];
+      return repos.map( function (repo) {
+        repo.value = repo.name.toLowerCase();
+        return repo;
+      });
+}
 
 
+function querySearch (query) {
+      var results = query ? self.repos.filter( createFilterFor(query) ) : self.repos,
+          deferred;
+      if (self.simulateQuery) {
+        deferred = $q.defer();
+        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+        return deferred.promise;
+      } else {
+        return results;
+      }
+}
+
+function searchTextChange(text) {
+      $log.info('Text changed to ' + text);
+}
+
+function selectedItemChange(item) {
+      $log.info('Item changed to ' + JSON.stringify(item));
+}
+
+function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(item) {
+        return (item.value.indexOf(lowercaseQuery) === 0);
+      };
+
+}
 
 }

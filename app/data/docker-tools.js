@@ -60,6 +60,21 @@ function runService(image, name,options, callback) {
   dockerJS.run(image,callback, _.extend({}, {name: nameService},  options))
 }
 
+/*function runServiceOneLine(image, name,options, callback) {
+  const nameService = `${service_prefix}_${name}`
+  // TODO: Check if is existent
+  let data_line = '';
+  dockerJS.run(image,(err,data) => {if(err) console.log(err)}, _.extend({}, {name: nameService},  options)).stdout.on(
+  'data',
+  function(data) {
+    data_line += data;
+    if (data_line[data_line.length-1] == '\n') {
+      callback(data_line);
+    }
+  }
+);
+}*/
+
 function startService(nameService, callback) {
   if (!isService(nameService)) {
     nameService = `${service_prefix}_${nameService}`;

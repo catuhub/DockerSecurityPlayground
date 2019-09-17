@@ -34,7 +34,14 @@ DSP_GraphEditorController : function DSP_GraphEditorController(RegexService, $sc
 
 
 
-
+        var drawapp  = new example.Application();
+        drawapp.view.installEditPolicy(  new draw2d.policy.connection.DragConnectionCreatePolicy({
+            createConnection: function(){
+                return new HoverConnection();
+            }
+        }));
+        var reader = new draw2d.io.json.Reader();
+        reader.unmarshal(drawapp.view, jsonDocument);
 
   /* DODCKER API INIT  : load docker images */
   dockerAPIService.getDockerImages()

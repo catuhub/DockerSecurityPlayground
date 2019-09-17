@@ -25,9 +25,20 @@ const log = AppUtils.getLogger();
 // const appUtils = require('../util/AppUtils.js');
 
 // const log = appUtils.getLogger();
+
+
+function getListHackTools(req,res){
+    dockerImages.getListHackTools((err,data) => {
+        httpHelper.response(res,err,data);
+    });
+}
+
+
 function _parseOptions(service) {
   let options = {};
   options.interactive = service.isInteractive;
+  options.oneline = service.isOneLine;
+  options.oneline_network = service.OneLineNetwork;
   options.detached = service.isDaemonized;
   if (service.command) {
   options.cmd = service.command;
@@ -119,6 +130,25 @@ function getNetworkList(req, res) {
   AppUtils.response('Run Service Request', res, err, data, true)
   });
 }
+
+/*function runServiceOneLine(req,res){
+  let containerName;
+  let imageName;
+  let options;
+  log.info("[DOCKER TOOLS] Run Service Request");
+  async.waterfall([
+    // Check values
+    (cb) => Checker.checkParams(req.params, ['nameservice'], cb),
+    (cb) => Checker.checkParams(req.body, ['name', 'selectedImage', 'isOneLine', 'OneLineNetwork'], cb),
+    (cb) => {
+      containerName = req.body.name;
+      imageName = req.body.selectedImage.name;
+      options = _parseOptions(req.body);
+      dockerServices.runServiceOneLine(imageName, containerName, options, cb)
+    }], (err, data) => {
+  AppUtils.response('Run Service Request', res, err, data, true)
+  });
+}*/
 
 function startService(req, res) {
   log.info("[DOCKER TOOLS] Start Service");
@@ -334,6 +364,7 @@ exports.getNetworkList = getNetworkList;
 exports.attachNetwork = attachNetwork;
 exports.detachNetwork = detachNetwork;
 exports.setAsDefault = setAsDefault;
+exports.getListHackTools = getListHackTools;
 // exports.getListImages = getListImages;
 // exports.dirExists = dirExists;
 // exports.dockershell = dockershell;

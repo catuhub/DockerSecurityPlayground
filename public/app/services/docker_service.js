@@ -4,6 +4,7 @@ var api = '/dsp_v1/docker_network/' ;
 	var api_docker = '/dsp_v1/docker_images/' ;
 	var dsp_images_docker = '/dsp_v1/dsp_images/' ;
 	var dsp_running_services = '/dsp_v1/services/' ;
+    var dsp_oneline_services = '/dsp_v1/oneline_services/'
 	var dsp_service_network = '/dsp_v1/networkservices' ;
     var dsp_hack_tools = '/dsp_v1/hack_tools';
   var url = 'http://' + location.host + '/';
@@ -170,6 +171,9 @@ var api = '/dsp_v1/docker_network/' ;
     },
     runService : function runService(container) {
       return $http.post(dsp_running_services+container.name, container)
+    },
+    runServiceOneLine:function runServiceOneLine(container){
+      return $http.post(dsp_oneline_services+container.name, container)
     },
     stopService: function stopService(containerName) {
       return $http.put(dsp_running_services+"stop/"+containerName);

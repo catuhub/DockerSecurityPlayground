@@ -64,6 +64,16 @@ function manageInstallation(ws, jsonMessage) {
   );
 }
 
+function manageDockerRun(ws,jsonMessage){
+    const params = jsonMessage.params;
+    console.log('in manage docker run');
+    console.log(jsonMessage);
+    dockerActions.dockerRun(params, err => {
+        sendResponse(ws,err);
+    }, (dataline) => {
+      sendProgressMessage(ws,dataline);
+    });
+}
 
 function manageDockerUp(ws, jsonMessage) {
   const body = jsonMessage.body;
@@ -171,6 +181,9 @@ exports.init = function init(server) {
       switch (jsonMessage.action) {
         case 'installation':
           manageInstallation(ws, jsonMessage);
+          break;
+        case 'docker_run':
+          manageDockerRun(ws, jsonMessage);
           break;
         case 'docker_up':
           manageDockerUp(ws, jsonMessage);

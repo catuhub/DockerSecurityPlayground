@@ -20,21 +20,24 @@
         <script src="assets/js/angular-messages.min.js"></script>
         <script src="assets/js/angular-material.min.js"></script>
         <script src="assets/js/angular-aria.min.js"></script>
-        <!-- UI ROUTER DA SOSTITUIRE CON VERSIONE ASSETS/JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/angular-ui-router.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.22/angular-ui-router.js.map"></script>
-
-		<link href="assets/css/bootstrap.css" rel="stylesheet">
+        <script src="assets/js/vtortola.ng-terminal.js"></script>
+        
+        <link href="assets/css/bootstrap.css" rel="stylesheet">
 		<link href="assets/css/grapheditor.css" rel="stylesheet">
 		<link href="assets/css/nav_fixed.css" rel="stylesheet">
+        <link href="assets/css/vtortola.ng-terminal.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet" type="text/css">
+        <link href="assets/css/terminal.css" rel="stylesheet">
+        <link href="assets/css/autocomplete.css" rel="stylesheet">
+
 		<script src="assets/js/fabric.min.js"></script>
-                <script src="assets/js/prism.js"></script>
+        <script src="assets/js/prism.js"></script>
 		<script src="assets/js/GraphHandler.js"></script>
 		<script src="assets/js/bootstrap-colorpicker-module.js"></script>
 		<script src="assets/js/angular-websocket.min.js"></script>
 		<!-- loadingbar -->
 		<script src="assets/js/loading-bar.js"></script>
-	        <link href='assets/css/loading-bar.css' rel='stylesheet' />
+	    <link href='assets/css/loading-bar.css' rel='stylesheet' />
 				<!-- -->
 
 		<link rel="stylesheet" href="assets/css/font-awesome.css"/>
@@ -58,7 +61,7 @@
 
 <script>
 	//ANGULAR COMPONENT REGISTRATION 
-	angular.module("dockersecplayground", ['ngAnimate', 'chieffancypants.loadingBar', 'ngSanitize', 'ui.bootstrap', 'ngWebSocket', 'ui-notification', 'colorpicker.module', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'ngRoute'] )
+	angular.module("dockersecplayground", ['ngAnimate', 'chieffancypants.loadingBar', 'ngSanitize', 'ui.bootstrap', 'ngWebSocket', 'ui-notification', 'colorpicker.module', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'ngRoute', 'vtortola.ng-terminal'] )
     .component("copyFromContainerComponent", dsp_copyFromContainer)
     .component("copyInContainerComponent", dsp_copyInContainer)
 		.service('dockerAPIService', DockerAPIService) 
@@ -100,7 +103,6 @@
 <body ng-app="dockersecplayground">
   <!-- Start controller -->
   <span id="appController" ng-controller="actionController">
-
   <div class="jumbotron text-center ">
   <h1>{{labName}}</h1>
   <h4>{{labInfos.description}} </h4>

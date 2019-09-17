@@ -325,6 +325,11 @@ $http.get("/dsp_v1/labs/"+$scope.nameRepo+"/"+$scope.labName)
       $scope.responseError = "";
   }
 
+    dockerAPIService.getListHackTools()
+        .then(function successCallback(response){
+            $scope.listTools = response.data.data.images;
+        });
+
   /************************** NETWORK INFO  **********************/
   //Current network view
 

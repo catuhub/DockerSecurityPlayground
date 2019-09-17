@@ -18,11 +18,20 @@
 	<script src="assets/js/angular-ui-notification.min.js"></script>
 	<script src="assets/js/approve.min.js"></script>
 	<script src="assets/js/angular-websocket.min.js"></script>
-    
+    <script src="assets/js/jquery-ui.js"></script>
+    <script src="assets/js/jquery.browser.js"></script>
+    <script src="assets/js/jquery.layout.js"></script>
+    <script src="assets/js/draw2d.js"></script>
+    <script src="assets/js/Application.js"></script>
+	<script src="assets/js/View.js"></script>
+    <script src="assets/js/Toolbar.js"></script>
+    <script src="assets/js/HoverConnection.js"></script>
+    <script src="assets/js/document.js"></script>
 
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<link href="assets/css/grapheditor.css" rel="stylesheet">
 	<link href="assets/css/nav_fixed.css" rel="stylesheet">
+    <link href="assets/css/jquery.layout.css" rel="stylesheet">
 	<link rel='stylesheet prefetch' href='assets/css/colorpicker.css'>
 	<link rel='stylesheet' href='assets/css/prism.css'>
 	<link rel="stylesheet" href="assets/css/font-awesome.css"/>
@@ -33,7 +42,7 @@
 	<!-- JSTree Imports -->
 	<link rel="stylesheet" type="text/css" href="assets/jstree/themes/default/style.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/tree_dir.css">
-	<script src="assets/js/jquery-min.js"> </script>
+    <!--<script src="assets/js/jquery-min.js"> </script>-->
 	<script src="assets/jstree/jstree.js"></script>
 	<script src="app/components/jsTree.directive.js"></script>
 
@@ -162,6 +171,7 @@
 			 Fabric.js doesn't know where to draw. -->
 
 <div class="row">
+    
 
 
 <div class="col-sm-3">
@@ -173,9 +183,13 @@
 	ng-class=" containerToDraw.name===c.name ? 'active' : '' " 
 	ng-click="selectContainerAction($event)" ng-repeat="(key,c) in containerListNotToDraw">{{c.name}}</a>
 	  </div>
-
-
-
+<div id="container">
+<div id="navigation" class="col-sm-3">
+    	<div data-shape="draw2d.shape.node.Start"   class="palette_node_element draw2d_droppable">Start</div>
+    	<div data-shape="draw2d.shape.node.End"     class="palette_node_element draw2d_droppable">End</div>
+    	<div data-shape="draw2d.shape.node.Between" class="palette_node_element draw2d_droppable">Between</div>
+</div>
+</div>
 <div 
   ng-if="containerDescription"
   style="
@@ -283,10 +297,11 @@
 </div> <!-- ENd info -->
 
 </div> <!-- End container list -->
-	<div class="col-sm-9">
+<div id="content">
+	<div id="canvas" class="col-sm-9">
 		<canvas ng-click="canvasClick()" width=900px height=800px id="c"></canvas>
 	</div>
-
+</div>
 
 
 
